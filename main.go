@@ -139,13 +139,16 @@ func main() {
 		db:     db,
 		exPath: exPath,
 	}
+
+	s.router.PathPrefix("/files/").Handler(http.StripPrefix("/files/", http.FileServer(http.Dir("./files"))))
+
 	s.routes()
 
 	s.connectOnStartup()
 
 	srv := &http.Server{
-		Addr:    *address + ":" + *port,
-		Handler: s.router,
+		Addr:              *address + ":" + *port,
+		Handler:           s.router,
 		ReadHeaderTimeout: 20 * time.Second,
 		ReadTimeout:       60 * time.Second,
 		WriteTimeout:      120 * time.Second,
